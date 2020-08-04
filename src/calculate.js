@@ -12,8 +12,6 @@ const intersect = (ooa_price, ooa_shipping, a_price, a_shipping) => {
     const x = (-cashback_amazon*a_shipping + ooa_shipping*(cashback_outside_amazon - 1) + a_shipping)
         / (a_price * (cashback_amazon - 1) - ooa_price*cashback_outside_amazon + ooa_price);
 
-    console.log(`x = ${x} -> ${(!isFinite (x) || x < 0) ?  0 : Math.ceil(x)}`);
-
     return isFinite (x) ? x : undefined;
 };
 
