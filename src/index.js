@@ -1,7 +1,8 @@
 import './index.css';
-
-const cashback_amazon        = 0.03;
-const cashback_out_of_amazon = 0.005;
+import {
+	cashback_amazon, cashback_outside_amazon,
+	calculate_amazon, calculate_outside_amazon, intersect
+} from './calculate';
 
 const update_result_calculation = x => {
 	const ooa_price    = Number (document.getElementById('ooa-price')   .value);
@@ -10,7 +11,7 @@ const update_result_calculation = x => {
 	const a_shipping   = Number (document.getElementById('a-shipping')  .value);
 
 	document.getElementById('result_calculation').textContent
-		= `With quantity = ${x}:\r\nPrice out of Amazon: ${(ooa_price*x + ooa_shipping)*(1-cashback_out_of_amazon)} = ${x}*${ooa_price} + ${ooa_shipping} - ${cashback_out_of_amazon*100} % cashback\r\nPrice on Amazon: ${(a_price*x + a_shipping) * (1-cashback_amazon)} = ${x}*${a_price} + ${a_shipping} - ${cashback_amazon*100} % cashback`;
+		= `With quantity = ${x}:\r\nPrice outside Amazon: ${calculate_outside_amazon(x, ooa_price, ooa_shipping).toFixed(2)} = (${x}*${ooa_price} + ${ooa_shipping}) - ${cashback_outside_amazon*100} % cashback\r\nPrice on Amazon: ${calculate_amazon(x, a_price, a_shipping).toFixed(2)} = (${x}*${a_price} + ${a_shipping}) - ${cashback_amazon*100} % cashback`;
 }
 
 const update = () => {
@@ -19,29 +20,22 @@ const update = () => {
 	const a_price      = Number (document.getElementById('a-price')     .value);
 	const a_shipping   = Number (document.getElementById('a-shipping')  .value);
 
-	// (ooa_price*x + ooa_shipping)*(1-cashback_out_of_amazon) = ((a_price*x + a_shipping) * (1-cashback_amazon))
-	let x = (-cashback_amazon*a_shipping + ooa_shipping*(cashback_out_of_amazon - 1) + a_shipping)
-		/ (a_price * (cashback_amazon - 1) - ooa_price*cashback_out_of_amazon + ooa_price);
-	
-	console.log(`x = ${x} -> ${(!isFinite (x) || x < 0) ?  0 : Math.ceil(x)}`);
-	if (!isFinite (x) || x < 0)
-		x = 0;
-	else
-		x = Math.ceil (x);
+	const x = intersect (ooa_price, ooa_shipping, a_price, a_shipping) || 0;
+	const X = Math.ceil (x);
 
 	document.getElementById('result').textContent = 
-		x > 1 ? (
-			(ooa_price*(x-x/10) + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*(x-x/10) + a_shipping) * (1-cashback_amazon))
-			? `It makes sense to buy on Amazon when quantity >= ${Math.ceil(x)}`
-			: `It makes sense to buy out of Amazon when quantity >= ${Math.ceil(x)}`
-		)
-		: (
-			(ooa_price*(x-x/10) + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*(x-x/10) + a_shipping) * (1-cashback_amazon))
-			? `With these parameters, it always makes sense to buy outside of Amazon.`
-			: `With these parameters, it always makes sense to buy on Amazon.`
-		);
+            x > 1 ? ( // > 1: depends on x -> check at ceil(x)
+                calculate_outside_amazon (X, ooa_price, ooa_shipping) < calculate_amazon (X, a_price, a_shipping)
+                ? `It makes sense to buy pizsode Amazon when quantity >= ${X}`
+                : `It makes sense to buy on Amazon when quantity >= ${X}`
+            )
+            : ( // <= 1: does not depend on x; valid from x=1 on -> we can simply check at x = 1
+                calculate_outside_amazon (1, ooa_price, ooa_shipping) < calculate_amazon (1, a_price, a_shipping)
+                ? `With these parameters, it always makes sense to buy outside of Amazon.`
+                : `With these parameters, it always makes sense to buy on Amazon.`
+            );
 	
-	update_result_calculation (x > 1 ? x : 1);
+	update_result_calculation (Math.max (X, 1));
 };
 
 document.getElementById ('reset').addEventListener ('click', event => {
