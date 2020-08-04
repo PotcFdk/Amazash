@@ -44,6 +44,12 @@ const update = () => {
 	update_result_calculation (x > 1 ? x : 1);
 };
 
+document.getElementById ('reset').addEventListener ('click', event => {
+	event.preventDefault();
+	Array.from (document.getElementsByTagName ('input'))
+		.forEach (obj => obj.value = '')
+});
+
 document.getElementById('ooa-price')   .addEventListener ('input', update);
 document.getElementById('ooa-shipping').addEventListener ('input', update);
 document.getElementById('a-price')     .addEventListener ('input', update);
