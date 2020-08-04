@@ -4,15 +4,9 @@ import {
 	calculate_amazon, calculate_outside_amazon, intersect
 } from './calculate';
 
-const update_result_calculation = x => {
-	const ooa_price    = Number (document.getElementById('ooa-price')   .value);
-	const ooa_shipping = Number (document.getElementById('ooa-shipping').value);
-	const a_price      = Number (document.getElementById('a-price')     .value);
-	const a_shipping   = Number (document.getElementById('a-shipping')  .value);
-
+const update_result_calculation = (ooa_price, ooa_shipping, a_price, a_shipping, x) =>
 	document.getElementById('result_calculation').textContent
 		= `With quantity = ${x}:\r\nPrice outside Amazon: ${calculate_outside_amazon(x, ooa_price, ooa_shipping).toFixed(2)} = (${x}*${ooa_price} + ${ooa_shipping}) - ${cashback_outside_amazon*100} % cashback\r\nPrice on Amazon: ${calculate_amazon(x, a_price, a_shipping).toFixed(2)} = (${x}*${a_price} + ${a_shipping}) - ${cashback_amazon*100} % cashback`;
-}
 
 const update = () => {
 	const ooa_price    = Number (document.getElementById('ooa-price')   .value);
@@ -35,7 +29,7 @@ const update = () => {
                 : `With these parameters, it always makes sense to buy on Amazon.`
             );
 	
-	update_result_calculation (Math.max (X, 1));
+	update_result_calculation (ooa_price, ooa_shipping, a_price, a_shipping, Math.max (X, 1));
 };
 
 document.getElementById ('reset').addEventListener ('click', event => {
