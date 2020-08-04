@@ -10,7 +10,7 @@ const update_result_calculation = x => {
 	const a_shipping   = Number (document.getElementById('a-shipping')  .value);
 
 	document.getElementById('result_calculation').textContent
-		= `With quantity = ${x}:\r\nPrice out of Amazon: ${(ooa_price*x + ooa_shipping)*(1-cashback_out_of_amazon)} = ${x}*${ooa_price} + ${ooa_shipping} - ${cashback_out_of_amazon*100} % cashback\r\nPrice on Amazon: ${(a_price*x + a_shipping) * (1-cashback_amazon)} = ${x} * ${a_price} + ${a_shipping} - ${cashback_amazon*100} % cashback`;
+		= `With quantity = ${x}:\r\nPrice out of Amazon: ${(ooa_price*x + ooa_shipping)*(1-cashback_out_of_amazon)} = ${x}*${ooa_price} + ${ooa_shipping} - ${cashback_out_of_amazon*100} % cashback\r\nPrice on Amazon: ${(a_price*x + a_shipping) * (1-cashback_amazon)} = ${x}*${a_price} + ${a_shipping} - ${cashback_amazon*100} % cashback`;
 }
 
 const update = () => {
@@ -20,9 +20,11 @@ const update = () => {
 	const a_shipping   = Number (document.getElementById('a-shipping')  .value);
 
 	// (ooa_price*x + ooa_shipping)*(1-cashback_out_of_amazon) = ((a_price*x + a_shipping) * (1-cashback_amazon))
-	const x = (-cashback_amazon*a_shipping + ooa_shipping*(cashback_out_of_amazon - 1) + a_shipping)
+	let x = (-cashback_amazon*a_shipping + ooa_shipping*(cashback_out_of_amazon - 1) + a_shipping)
 		/ (a_price * (cashback_amazon - 1) - ooa_price*cashback_out_of_amazon + ooa_price);
 	
+	if (!isFinite (x) || x < 0) x = 0;
+
 	document.getElementById('result').textContent = 
 		x > 1 ? (
 			(ooa_price*(x-10) + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*(x-10) + a_shipping) * (1-cashback_amazon))
@@ -30,9 +32,9 @@ const update = () => {
 			: `It makes sense to buy out of Amazon when quantity >= ${Math.ceil(x)}`
 		)
 		: (
-			(ooa_price*(x-10) + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*(x-10) + a_shipping) * (1-cashback_amazon))
-			? `With these parameters, it always makes sense to buy on Amazon.`
-			: `With these parameters, it always makes sense to buy outside of Amazon.`
+			(ooa_price*x + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*x + a_shipping) * (1-cashback_amazon))
+			? `With these parameters, it always makes sense to buy outside of Amazon.`
+			: `With these parameters, it always makes sense to buy on Amazon.`
 		);
 	
 	update_result_calculation (x > 1 ? Math.ceil (x) : 1);
