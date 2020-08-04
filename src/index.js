@@ -26,7 +26,7 @@ const update = () => {
 	document.getElementById('result').textContent = 
             x > 1 ? ( // > 1: depends on x -> check at ceil(x)
                 calculate_outside_amazon (X, ooa_price, ooa_shipping) < calculate_amazon (X, a_price, a_shipping)
-                ? `It makes sense to buy pizsode Amazon when quantity >= ${X}`
+                ? `It makes sense to buy outside Amazon when quantity >= ${X}`
                 : `It makes sense to buy on Amazon when quantity >= ${X}`
             )
             : ( // <= 1: does not depend on x; valid from x=1 on -> we can simply check at x = 1
