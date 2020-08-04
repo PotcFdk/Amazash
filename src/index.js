@@ -23,21 +23,25 @@ const update = () => {
 	let x = (-cashback_amazon*a_shipping + ooa_shipping*(cashback_out_of_amazon - 1) + a_shipping)
 		/ (a_price * (cashback_amazon - 1) - ooa_price*cashback_out_of_amazon + ooa_price);
 	
-	if (!isFinite (x) || x < 0) x = 0;
+	console.log(`x = ${x} -> ${(!isFinite (x) || x < 0) ?  0 : Math.ceil(x)}`);
+	if (!isFinite (x) || x < 0)
+		x = 0;
+	else
+		x = Math.ceil (x);
 
 	document.getElementById('result').textContent = 
 		x > 1 ? (
-			(ooa_price*(x-10) + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*(x-10) + a_shipping) * (1-cashback_amazon))
+			(ooa_price*(x-x/10) + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*(x-x/10) + a_shipping) * (1-cashback_amazon))
 			? `It makes sense to buy on Amazon when quantity >= ${Math.ceil(x)}`
 			: `It makes sense to buy out of Amazon when quantity >= ${Math.ceil(x)}`
 		)
 		: (
-			(ooa_price*x + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*x + a_shipping) * (1-cashback_amazon))
+			(ooa_price*(x-x/10) + ooa_shipping)*(1-cashback_out_of_amazon) < ((a_price*(x-x/10) + a_shipping) * (1-cashback_amazon))
 			? `With these parameters, it always makes sense to buy outside of Amazon.`
 			: `With these parameters, it always makes sense to buy on Amazon.`
 		);
 	
-	update_result_calculation (x > 1 ? Math.ceil (x) : 1);
+	update_result_calculation (x > 1 ? x : 1);
 };
 
 document.getElementById('ooa-price')   .addEventListener ('input', update);
