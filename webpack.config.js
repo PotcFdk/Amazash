@@ -5,13 +5,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackBannerPlugin = require('@potcfdk/html-webpack-banner-plugin');
 
 module.exports = env => ({
-	entry: './src/index.js',
+	entry: './src/index.ts',
 	output: {
 		filename: 'main.js',
 		path: path.resolve(__dirname, 'dist'),
 	},
 	module: {
 		rules: [
+			{
+				test: /\.tsx?$/,
+				loader: 'ts-loader',
+				exclude: /node_modules/
+			},
 			{
 				test: /\.css$/,
 				use: [
@@ -41,5 +46,8 @@ module.exports = env => ({
 		new HtmlWebpackBannerPlugin({
 			banner: Array.from(fs.readFileSync('src/index.html').toString().matchAll(/<!\-\-(([^]|[\r\n])*?)\-\->/g)).filter(c => c[1].match(/Copyright/))[0][1]
 		})
-	]
+	],
+	resolve: {
+		extensions: ['.ts'],
+	},
 });

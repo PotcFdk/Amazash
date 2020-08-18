@@ -1,11 +1,11 @@
 const cashback_amazon         = 0.03;
 const cashback_outside_amazon = 0.005;
 
-const calculate_amazon =         (n, price, shipping) => (n*price + shipping) * (1 - cashback_amazon);
+const calculate_amazon =         (n:number, price:number, shipping:number):number => (n*price + shipping) * (1 - cashback_amazon);
 
-const calculate_outside_amazon = (n, price, shipping) => (n*price + shipping) * (1 - cashback_outside_amazon);
+const calculate_outside_amazon = (n:number, price:number, shipping:number):number => (n*price + shipping) * (1 - cashback_outside_amazon);
 
-const intersect = (ooa_price, ooa_shipping, a_price, a_shipping) => {
+const intersect = (ooa_price:number, ooa_shipping:number, a_price:number, a_shipping:number):number|undefined => {
     // calculate intersection:
     // (ooa_price*x + ooa_shipping)*(1-cashback_outside_amazon) = ((a_price*x + a_shipping) * (1-cashback_amazon))
 

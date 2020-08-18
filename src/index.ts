@@ -4,20 +4,20 @@ import {
 	calculate_amazon, calculate_outside_amazon, intersect
 } from './calculate';
 
-const update_result_calculation = (ooa_price, ooa_shipping, a_price, a_shipping, x) =>
-	document.getElementById('result_calculation').textContent
+const update_result_calculation = (ooa_price:number, ooa_shipping:number, a_price:number, a_shipping:number, x:number) =>
+	document.getElementById('result_calculation')!.textContent
 		= `With quantity = ${x}:\r\nPrice outside Amazon: ${calculate_outside_amazon(x, ooa_price, ooa_shipping).toFixed(2)} = (${x}*${ooa_price} + ${ooa_shipping}) - ${cashback_outside_amazon*100} % cashback\r\nPrice on Amazon: ${calculate_amazon(x, a_price, a_shipping).toFixed(2)} = (${x}*${a_price} + ${a_shipping}) - ${cashback_amazon*100} % cashback`;
 
 const update = () => {
-	const ooa_price    = Number (document.getElementById('ooa-price')   .value);
-	const ooa_shipping = Number (document.getElementById('ooa-shipping').value);
-	const a_price      = Number (document.getElementById('a-price')     .value);
-	const a_shipping   = Number (document.getElementById('a-shipping')  .value);
+	const ooa_price    = Number ((<HTMLInputElement>document.getElementById('ooa-price'))   .value);
+	const ooa_shipping = Number ((<HTMLInputElement>document.getElementById('ooa-shipping')).value);
+	const a_price      = Number ((<HTMLInputElement>document.getElementById('a-price'))     .value);
+	const a_shipping   = Number ((<HTMLInputElement>document.getElementById('a-shipping'))  .value);
 
 	const x = intersect (ooa_price, ooa_shipping, a_price, a_shipping) || 0;
 	const X = Math.ceil (x);
 
-	document.getElementById('result').textContent = 
+	document.getElementById('result')!.textContent =
             x > 1 ? ( // > 1: depends on x -> check at ceil(x)
                 calculate_outside_amazon (X, ooa_price, ooa_shipping) < calculate_amazon (X, a_price, a_shipping)
                 ? `It makes sense to buy outside Amazon when quantity >= ${X}`
@@ -32,15 +32,15 @@ const update = () => {
 	update_result_calculation (ooa_price, ooa_shipping, a_price, a_shipping, Math.max (X, 1));
 };
 
-document.getElementById ('reset').addEventListener ('click', event => {
+document.getElementById ('reset')!.addEventListener ('click', event => {
 	event.preventDefault();
 	Array.from (document.getElementsByTagName ('input'))
 		.forEach (obj => obj.value = '')
 });
 
-document.getElementById('ooa-price')   .addEventListener ('input', update);
-document.getElementById('ooa-shipping').addEventListener ('input', update);
-document.getElementById('a-price')     .addEventListener ('input', update);
-document.getElementById('a-shipping')  .addEventListener ('input', update);
+document.getElementById('ooa-price')   !.addEventListener ('input', update);
+document.getElementById('ooa-shipping')!.addEventListener ('input', update);
+document.getElementById('a-price')     !.addEventListener ('input', update);
+document.getElementById('a-shipping')  !.addEventListener ('input', update);
 
 window.onload = update;
