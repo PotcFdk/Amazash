@@ -20,8 +20,7 @@
   "devDependencies": {
     "@potcfdk/html-webpack-banner-plugin": "git+https://github.com/PotcFdk/html-webpack-banner-plugin.git",
     "@types/jest": "^26.0.10",
-    "copy-webpack-plugin": "^5.1.1",
-    "css-loader": "^3.5.3",
+    "css-loader": "^4.2.1",
     "file-loader": "^6.0.0",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
@@ -30,7 +29,7 @@
     "ts-jest": "^26.2.0",
     "ts-loader": "^8.0.2",
     "typescript": "^3.9.7",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   }
 }
