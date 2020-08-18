@@ -41,7 +41,7 @@ const update_result_calculation = (ooa_price:Decimal, ooa_shipping:Decimal, a_pr
 			let a = row.insertCell(3);
 			a.innerText = `${a_price.mul(item.quantity).plus(a_shipping)} - ${calculate_amazon_points(item.quantity, a_price, a_shipping).div(100)} = ${item.a.toFixed(2)}`;
 			let verdict = row.insertCell(4);
-			verdict.innerText = item.ooa.greaterThanOrEqualTo(item.a) ? 'Amazon wins!' : 'Outside of Amazon wins!';
+			verdict.innerText = (item.ooa.greaterThanOrEqualTo(item.a) ? `Amazon wins! (δ = ${item.ooa.minus(item.a)})` : `Outside of Amazon wins! (δ = ${item.a.minus(item.ooa)})`);
 		});
 };
 
