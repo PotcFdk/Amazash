@@ -54,12 +54,16 @@ button {
 select {
 	width: 200px;
 }
+table {
+	margin: 1vw auto 0 auto;
+	border-collapse: collapse;
+	font-size: large;
+}
+th {
+	padding: 0 1em;
+}
 #result {
 	display: block;
 	margin-top: 2vw;
 	font-size: x-large;
-}
-#result_calculation {
-	font-size: large;
-	white-space: pre;
 }

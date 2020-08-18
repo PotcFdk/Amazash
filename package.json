@@ -21,6 +21,7 @@
     "@potcfdk/html-webpack-banner-plugin": "git+https://github.com/PotcFdk/html-webpack-banner-plugin.git",
     "@types/jest": "^26.0.10",
     "css-loader": "^4.2.1",
+    "decimal.js": "^10.2.0",
     "file-loader": "^6.0.0",
     "git-last-commit": "^1.0.0",
     "html-loader": "^1.1.0",
