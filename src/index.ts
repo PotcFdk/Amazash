@@ -35,11 +35,11 @@ const update_result_calculation = (ooa_price:Decimal, ooa_shipping:Decimal, a_pr
 			let quantity = row.insertCell(0);
 			quantity.innerText = item.quantity.toString();
 			let ooa = row.insertCell(1);
-			ooa.innerText = `${ooa_price.mul(x).plus(ooa_shipping)} - ${calculate_outside_amazon_points(x, ooa_price, ooa_shipping).div(100)} = ${item.ooa.toFixed(2)}`;
+			ooa.innerText = `${ooa_price.mul(item.quantity).plus(ooa_shipping)} - ${calculate_outside_amazon_points(item.quantity, ooa_price, ooa_shipping).div(100)} = ${item.ooa.toFixed(2)}`;
 			let cmp = row.insertCell(2);
 			cmp.innerText = item.ooa.greaterThan(item.a) ? '>' : item.ooa.lessThan(item.a) ? '<' : '=';
 			let a = row.insertCell(3);
-			a.innerText = `${a_price.mul(x).plus(a_shipping)} - ${calculate_amazon_points(x, a_price, a_shipping).div(100)} = ${item.a.toFixed(2)}`;
+			a.innerText = `${a_price.mul(item.quantity).plus(a_shipping)} - ${calculate_amazon_points(item.quantity, a_price, a_shipping).div(100)} = ${item.a.toFixed(2)}`;
 			let verdict = row.insertCell(4);
 			verdict.innerText = item.ooa.greaterThanOrEqualTo(item.a) ? 'Amazon wins!' : 'Outside of Amazon wins!';
 		});
