@@ -28,7 +28,7 @@ const update = () => {
                 ? `With these parameters, it always makes sense to buy outside of Amazon.`
                 : `With these parameters, it always makes sense to buy on Amazon.`
             );
-	
+
 	update_result_calculation (ooa_price, ooa_shipping, a_price, a_shipping, Math.max (X, 1));
 };
 
@@ -42,5 +42,10 @@ document.getElementById('ooa-price')   !.addEventListener ('input', update);
 document.getElementById('ooa-shipping')!.addEventListener ('input', update);
 document.getElementById('a-price')     !.addEventListener ('input', update);
 document.getElementById('a-shipping')  !.addEventListener ('input', update);
+
+declare const VERSION: string;
+declare const COMMITTIMESTAMP: number;
+
+document.getElementById('version')!.textContent = `Version: ${VERSION} from ${new Date(COMMITTIMESTAMP * 1e3).toUTCString()}`;
 
 window.onload = update;

@@ -1,6 +1,6 @@
 {
   "name": "amazash",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "WebApp for determining when it makes sense to buy outside Amazon w.r.t. the prime VISA card.",
   "private": true,
   "scripts": {
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/PotcFdk/Amazash.git"
   },
   "author": "PotcFdk",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/PotcFdk/Amazash/issues"
   },
@@ -22,6 +22,7 @@
     "@types/jest": "^26.0.10",
     "css-loader": "^4.2.1",
     "file-loader": "^6.0.0",
+    "git-last-commit": "^1.0.0",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.3.0",
     "jest": "^26.4.0",

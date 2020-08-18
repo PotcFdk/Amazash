@@ -1,10 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const util = require('util');
+const git = require('git-last-commit');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackBannerPlugin = require('@potcfdk/html-webpack-banner-plugin');
 
-module.exports = env => ({
+const gitCommit = util.promisify(git.getLastCommit)();
+
+module.exports = async env => ({
 	entry: './src/index.ts',
 	output: {
 		filename: 'main.js',
@@ -37,6 +41,10 @@ module.exports = env => ({
 		],
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			COMMITTIMESTAMP: (await gitCommit).committedOn,
+			VERSION: JSON.stringify(require('./package.json').version)
+		}),
 		new HtmlWebpackPlugin({
 			template: 'src/index.html',
 			minify: {
