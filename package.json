@@ -1,6 +1,6 @@
 {
   "name": "amazash",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "WebApp for determining when it makes sense to buy outside Amazon w.r.t. the prime VISA card.",
   "private": true,
   "scripts": {
@@ -31,6 +31,9 @@
     "ts-jest": "^26.2.0",
     "ts-loader": "^8.0.2",
     "typescript": "^3.9.7",
+    "vue": "^2.6.11",
+    "vue-loader": "^15.9.3",
+    "vue-template-compiler": "^2.6.11",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   }

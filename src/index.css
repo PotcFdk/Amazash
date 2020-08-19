@@ -2,7 +2,7 @@ body{
 	font: 62.5% "Trebuchet MS", sans-serif;
 	margin: 50px;
 }
-.container1 {
+#app {
 	position: absolute;
 	top: 10%;
 	left: 0;
@@ -62,7 +62,10 @@ table {
 th, td {
 	padding: 0 1em;
 }
-#result {
+.threshold-result {
+	background-color: red;
+}
+.resultmessage {
 	display: block;
 	margin-top: 2vw;
 	font-size: x-large;

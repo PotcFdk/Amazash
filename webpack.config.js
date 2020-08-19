@@ -6,6 +6,8 @@ const git = require('git-last-commit');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackBannerPlugin = require('@potcfdk/html-webpack-banner-plugin');
 
+const { VueLoaderPlugin } = require('vue-loader');
+
 const gitCommit = util.promisify(git.getLastCommit)();
 
 module.exports = async env => ({
@@ -19,7 +21,12 @@ module.exports = async env => ({
 			{
 				test: /\.tsx?$/,
 				loader: 'ts-loader',
-				exclude: /node_modules/
+				exclude: /node_modules/,
+				options: { appendTsSuffixTo: [/\.vue$/] }
+			},
+			{
+				test: /\.vue$/,
+				use: 'vue-loader'
 			},
 			{
 				test: /\.css$/,
@@ -30,7 +37,21 @@ module.exports = async env => ({
 			},
 			{
 				test: /\.html$/,
-				loader: 'html-loader'
+				loader: 'html-loader',
+				options: {
+					minimize: {
+						caseSensitive: true,
+						collapseWhitespace: true,
+						conservativeCollapse: true,
+						keepClosingSlash: true,
+						minifyCSS: true,
+						minifyJS: true,
+						removeComments: true,
+						removeRedundantAttributes: true,
+						removeScriptTypeAttributes: true,
+						removeStyleLinkTypeAttributes: true,
+					}
+				}
 			},
 			{
 				test: /\.(png|svg|jpg|gif)$/,
@@ -41,6 +62,7 @@ module.exports = async env => ({
 		],
 	},
 	plugins: [
+		new VueLoaderPlugin(),
 		new webpack.DefinePlugin({
 			COMMITTIMESTAMP: (await gitCommit).committedOn,
 			VERSION: JSON.stringify(require('./package.json').version)
@@ -48,6 +70,7 @@ module.exports = async env => ({
 		new HtmlWebpackPlugin({
 			template: 'src/index.html',
 			minify: {
+				caseSensitive: true,
 				collapseWhitespace: true
 			}
 		}),
@@ -57,5 +80,8 @@ module.exports = async env => ({
 	],
 	resolve: {
 		extensions: ['.ts'],
+		alias: {
+			'vue$': 'vue/dist/vue.js'
+		}
 	},
 });

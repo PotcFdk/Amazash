@@ -27,11 +27,11 @@ class OptimizationResult {
 const normalized_eligible_amazon_factor         = (n:Decimal) => n.dividedBy(cashback_amazon_per).floor();
 const normalized_eligible_outside_amazon_factor = (n:Decimal) => n.dividedBy(cashback_outside_amazon_per).floor();
 
-const calculate_amazon_points =         (n:number, price:Decimal, shipping:Decimal = new Decimal(0)):Decimal => normalized_eligible_amazon_factor        (price.mul(n).plus(shipping)).mul(cashback_amazon_points);
-const calculate_outside_amazon_points = (n:number, price:Decimal, shipping:Decimal = new Decimal(0)):Decimal => normalized_eligible_outside_amazon_factor(price.mul(n).plus(shipping)).mul(cashback_outside_amazon_points);
+const calculate_amazon_points =         (n:number, price:Decimal = new Decimal(0), shipping:Decimal = new Decimal(0)):Decimal => normalized_eligible_amazon_factor        (price.mul(n).plus(shipping)).mul(cashback_amazon_points);
+const calculate_outside_amazon_points = (n:number, price:Decimal = new Decimal(0), shipping:Decimal = new Decimal(0)):Decimal => normalized_eligible_outside_amazon_factor(price.mul(n).plus(shipping)).mul(cashback_outside_amazon_points);
 
-const calculate_amazon =         (n:number, price:Decimal, shipping:Decimal = new Decimal(0)):Decimal => price.mul(n).plus(shipping).minus(calculate_amazon_points        (n, price, shipping).div(100));
-const calculate_outside_amazon = (n:number, price:Decimal, shipping:Decimal = new Decimal(0)):Decimal => price.mul(n).plus(shipping).minus(calculate_outside_amazon_points(n, price, shipping).div(100));
+const calculate_amazon =         (n:number, price:Decimal = new Decimal(0), shipping:Decimal = new Decimal(0)):Decimal => price.mul(n).plus(shipping).minus(calculate_amazon_points        (n, price, shipping).div(100));
+const calculate_outside_amazon = (n:number, price:Decimal = new Decimal(0), shipping:Decimal = new Decimal(0)):Decimal => price.mul(n).plus(shipping).minus(calculate_outside_amazon_points(n, price, shipping).div(100));
 
 const intersect = (ooa_price:Decimal, ooa_shipping:Decimal, a_price:Decimal, a_shipping:Decimal):number|undefined => {
     // calculate intersection:
@@ -43,7 +43,7 @@ const intersect = (ooa_price:Decimal, ooa_shipping:Decimal, a_price:Decimal, a_s
     return x.isFinite() ? x.toNumber() : undefined;
 };
 
-const optimize = (ooa_price:Decimal, ooa_shipping:Decimal, a_price:Decimal, a_shipping:Decimal):OptimizationResult => {
+const optimize = (ooa_price:Decimal = new Decimal(0), ooa_shipping:Decimal = new Decimal(0), a_price:Decimal = new Decimal(0), a_shipping:Decimal = new Decimal(0)):OptimizationResult => {
     const x = intersect (ooa_price, ooa_shipping, a_price, a_shipping) || 0;
     const X = Math.ceil(x);
 
@@ -76,5 +76,5 @@ export {
     calculate_amazon_points, calculate_outside_amazon_points,
     cashback_amazon, cashback_outside_amazon,
     calculate_amazon, calculate_outside_amazon,
-    OrderPlace, intersect, optimize
+    OrderPlace, OptimizationResult, intersect, optimize
 };

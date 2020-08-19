@@ -121,17 +121,6 @@ describe("intersection", () => {
     intersectTestCase(D(31.61), D(28.15), D(16.58), D(60.56));
 });
 
-describe("mass_intersection", () => {
-    for (let i = 0; i < 1e4; ++i) {
-        intersectTestCase(
-            new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
-            new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
-            new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
-            new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2)
-        );
-    }
-});
-
 describe("mass_optimization", () => {
     for (let i = 0; i < 1e4; ++i) {
         const
