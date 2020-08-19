@@ -81,7 +81,7 @@ module.exports = async env => ({
 	resolve: {
 		extensions: ['.ts'],
 		alias: {
-			'vue$': 'vue/dist/vue.js'
+			'vue$': 'vue/dist/vue.min.js'
 		}
 	},
 });
