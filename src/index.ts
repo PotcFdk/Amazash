@@ -1,16 +1,12 @@
 import './index.css';
-import { calculate_amazon, calculate_outside_amazon, OptimizationResult, optimize } from './calculate';
 import {Decimal} from 'decimal.js';
 import Vue from "vue";
 import priceinput         from "./components/priceinput.vue";
 import resultmessage      from "./components/resultmessage.vue";
 import resulttable        from "./components/resulttable.vue";
 import versioninformation from "./components/versioninformation.vue";
-
-// @ts-ignore
-window.calculate_amazon = calculate_amazon;
-// @ts-ignore
-window.calculate_outside_amazon = calculate_outside_amazon;
+import configurationselector from "./components/configurationselector.vue";
+import {AmazonBonusCalculator, configurations, OptimizationResult} from "./calculate";
 
 declare const VERSION: string;
 declare const COMMITTIMESTAMP: number;
@@ -23,7 +19,9 @@ new Vue({
 		'ooaPrice':         undefined as Decimal|undefined,
 		'ooaShipping':      undefined as Decimal|undefined,
 		'version'    :      VERSION,
-		'commitTimestamp' : COMMITTIMESTAMP * 1e3
+		'commitTimestamp' : COMMITTIMESTAMP * 1e3,
+		'configurations':   configurations,
+		'configuration':    configurations.DE_Prime
 	},
 	methods: {
 		resetAll():void {
@@ -34,14 +32,19 @@ new Vue({
 		}
 	},
 	computed: {
+		calculator: {
+			get():AmazonBonusCalculator {
+				return new AmazonBonusCalculator (this.configuration)
+			}
+		},
 		optimizationResult: {
-			get() :OptimizationResult {
-				return optimize(this.ooaPrice, this.ooaShipping, this.aPrice, this.aShipping)
+			get():OptimizationResult {
+				return this.calculator.optimize(this.ooaPrice, this.ooaShipping, this.aPrice, this.aShipping)
 			}
 		}
 	},
 	components: {
-		priceinput, resultmessage, resulttable, versioninformation
+		configurationselector, priceinput, resultmessage, resulttable, versioninformation
 	}
 })
 

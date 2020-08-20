@@ -1,6 +1,6 @@
 {
   "name": "amazash",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "WebApp for determining when it makes sense to buy outside Amazon w.r.t. the prime VISA card.",
   "private": true,
   "scripts": {

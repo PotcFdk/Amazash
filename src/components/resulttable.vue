@@ -24,7 +24,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import Decimal from 'decimal.js'
-import {calculate_amazon, calculate_outside_amazon, calculate_amazon_points, calculate_outside_amazon_points} from "../calculate";
 
 interface ResultTableEntry {
   quantity:number;
@@ -37,11 +36,12 @@ export default Vue.extend({
   name: "resulttable",
   data: function() {
     return {
-      calculate_amazon_points, calculate_outside_amazon_points
+      calculate_amazon_points: this.calculator.calculate_amazon_points,
+      calculate_outside_amazon_points: this.calculator.calculate_outside_amazon_points
     }
   },
   props: [
-      'threshold', 'ooaPrice', 'ooaShipping', 'aPrice', 'aShipping'
+      'calculator', 'threshold', 'ooaPrice', 'ooaShipping', 'aPrice', 'aShipping'
   ],
   computed: {
     ooaPriceModel:    { get():Decimal { return this.ooaPrice    || new Decimal(0) } },
@@ -54,9 +54,9 @@ export default Vue.extend({
             .map(offset => offset + 11-Math.max(Math.min(this.threshold, 10), 0))
             .map(offset => <ResultTableEntry>({
                   quantity: this.threshold+offset,
-                  ooa: calculate_outside_amazon(this.threshold+offset, this.ooaPrice, this.ooaShipping),
+                  ooa: this.calculator.calculate_outside_amazon(this.threshold+offset, this.ooaPrice, this.ooaShipping),
                   //ooa_string: `(${x+offset}*${ooa_price} + ${ooa_shipping}) - ${cashback_outside_amazon * 100} % cashback`,
-                  a: calculate_amazon(this.threshold+offset, this.aPrice, this.aShipping),
+                  a: this.calculator.calculate_amazon(this.threshold+offset, this.aPrice, this.aShipping),
                   //a_string: `(${x+offset}*${a_price} + ${a_shipping}) - ${cashback_amazon * 100} % cashback`,
                   red: !offset
                 })

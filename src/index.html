@@ -25,6 +25,8 @@
 
 	<versioninformation v-bind:version="version" v-bind:commit-timestamp="commitTimestamp"></versioninformation>
 
+	<configurationselector v-bind:selected.sync="configuration" v-bind:configurations="configurations"></configurationselector>
+
 	<h1 class="demoHeaders">Calculator:</h1>
 
 	<priceinput title="Out-of-Amazon" v-bind:price.sync="ooaPrice" v-bind:shipping.sync="ooaShipping"></priceinput>
@@ -34,6 +36,7 @@
 
 	<resultmessage v-bind:optimization-result="optimizationResult"></resultmessage>
 	<resulttable
+			v-bind:calculator="calculator"
 			v-bind:threshold="optimizationResult.threshold"
 			v-bind:ooa-price="ooaPrice" v-bind:ooa-shipping="ooaShipping"
 			v-bind:a-price="aPrice" v-bind:a-shipping="aShipping"
