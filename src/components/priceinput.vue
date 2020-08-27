@@ -10,13 +10,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 import Decimal from 'decimal.js'
 
-export default Vue.extend({
-  props: [
-      'title', 'price', 'shipping'
-  ],
+export default defineComponent({
+  props: {
+    title: String,
+    price: Decimal,
+    shipping: Decimal
+  },
   methods: {
     isNumber: function (evt: KeyboardEvent) {
       if (evt.key.match(/^[\d,.]$/)) {
@@ -28,12 +30,12 @@ export default Vue.extend({
   },
   computed: {
     priceModel: {
-      get (): number|undefined { return this.price },
+      get (): number|undefined {  return this.price?.toNumber() },
       set (value: number) { if (value) this.$emit('update:price', new Decimal (value)) },
     },
     shippingModel: {
-      get (): number { return this.shipping },
-      set (value:number) { if (value) this.$emit('update:shipping', new Decimal (value)) },
+      get (): number|undefined { return this.shipping?.toNumber() },
+      set (value: number) { if (value) this.$emit('update:shipping', new Decimal (value)) },
     }
   }
 });

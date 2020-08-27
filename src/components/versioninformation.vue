@@ -3,18 +3,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { defineComponent } from 'vue'
 
-export default Vue.extend({
+export default defineComponent({
   name: "versioninformation",
-  props: [
-      'version', 'commitTimestamp'
-  ],
+  props: {
+    version: String,
+    commitTimestamp: {
+      type: Number,
+      default: 0
+    }
+  },
   computed: {
-    date: {
-      get():string {
-        return new Date(this.commitTimestamp).toUTCString()
-      }
+    date(): string {
+      return new Date(this.commitTimestamp).toUTCString()
     }
   }
 })

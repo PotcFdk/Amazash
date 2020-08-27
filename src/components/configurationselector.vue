@@ -1,7 +1,7 @@
 <template>
   <p>
     <select v-model="selectedModel">
-      <option v-for="configuration in configurations" v-bind:value="configuration">
+      <option v-for="configuration in configurations" v-bind:key="configuration.name" v-bind:value="configuration">
         {{ configuration.name }}: {{ configuration.Amazon }} % / {{ configuration.Outside/2 }} %
       </option>
     </select>
@@ -11,12 +11,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import {AmazonBonusConfiguration} from '../calculate'
+import { defineComponent, PropType } from 'vue'
+import {AmazonBonusConfiguration, configurations} from '../calculate'
 
-export default Vue.extend({
+export default defineComponent({
   name: "configurationselector",
-  props: ['selected', 'configurations'],
+  props: {
+    selected: {
+      type: Object as PropType<AmazonBonusConfiguration>,
+      default: configurations.DE_Prime
+    },
+    configurations: Object as PropType<AmazonBonusConfiguration[]>
+  },
   computed: {
     selectedModel: {
       get (): AmazonBonusConfiguration { return this.selected },

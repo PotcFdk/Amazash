@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Tests
 on: [push, pull_request]
 
 jobs:
@@ -13,5 +13,8 @@ jobs:
       - name: Install 🔧
         run: npm install
 
-      - name: Test 🧪
+      - name: Lint 🔍
+        run: npm run lint
+
+      - name: Unit Test 🧪
         run: npm test

@@ -1,22 +1,21 @@
 import {
     AmazonBonusCalculator, configurations,
     OrderPlace,
-} from './calculate';
+} from '@/calculate';
 import Decimal from "decimal.js";
-import CustomMatcherResult = jest.CustomMatcherResult;
 
-const D = (n:number) => new Decimal(n);
+const D = (n: number) => new Decimal(n);
 
 const instance = new AmazonBonusCalculator(configurations.DE_Prime);
 
 expect.extend({
-    toBeDecimal(received:Decimal, expected:Decimal) {
+    toBeDecimal(received: Decimal, expected: Decimal) {
         return {
             pass: received.equals(expected),
             message: () => `expected ${received} to equal ${expected}`
         };
     },
-    decimalToBe(received:Decimal, expected:number) {
+    decimalToBe(received: Decimal, expected: number) {
         return {
             pass: received.equals(expected),
             message: () => `expected ${received} to equal ${expected}`
@@ -24,6 +23,7 @@ expect.extend({
     }
 })
 
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
     namespace jest {
         interface Matchers<R> {
@@ -32,22 +32,23 @@ declare global {
         }
     }
 }
+/* eslint-enable @typescript-eslint/no-namespace */
 
 describe("outside amazon points", () => {
     test('1x 5.55 + 0 give 2 points', () => {
-        expect(instance.calculate_outside_amazon_points(1, D(5.55))).decimalToBe(2);
+        expect(instance.calculateOutsideAmazonPoints(1, D(5.55))).decimalToBe(2);
     });
 
     test('0x 10.25 + 5.55 give 2 points', () => {
-        expect(instance.calculate_outside_amazon_points(0, D(10.25), D(5.55))).decimalToBe(2);
+        expect(instance.calculateOutsideAmazonPoints(0, D(10.25), D(5.55))).decimalToBe(2);
     });
 
     test('5x 1 + 0.55 give 2 points', () => {
-        expect(instance.calculate_outside_amazon_points(5, D(1), D(.55))).decimalToBe(2);
+        expect(instance.calculateOutsideAmazonPoints(5, D(1), D(.55))).decimalToBe(2);
     });
 
     test('1x 164.49 + 0 give 82 points', () => {
-        expect(instance.calculate_outside_amazon_points(1, D(164.49))).decimalToBe(82);
+        expect(instance.calculateOutsideAmazonPoints(1, D(164.49))).decimalToBe(82);
     });
 });
 
@@ -59,19 +60,19 @@ describe("outside amazon grand total", () => {
 
 describe("amazon points", () => {
     test('1x 15.41 + 0 give 45 points', () => {
-        expect(instance.calculate_amazon_points(1, D(15.41))).decimalToBe(45);
+        expect(instance.calculateAmazonPoints(1, D(15.41))).decimalToBe(45);
     });
 
     test('0x 9.95 + 15.41 give 45 points', () => {
-        expect(instance.calculate_amazon_points(0, D(9.95), D(15.41))).decimalToBe(45);
+        expect(instance.calculateAmazonPoints(0, D(9.95), D(15.41))).decimalToBe(45);
     });
 
     test('30x 0.50 + 0.41 give 45 points', () => {
-        expect(instance.calculate_amazon_points(30, D(.5), D(.41))).decimalToBe(45);
+        expect(instance.calculateAmazonPoints(30, D(.5), D(.41))).decimalToBe(45);
     });
 
     test('1x 185.00 + 0.50 give (3.70+1.85) points', () => {
-        expect(instance.calculate_amazon_points(1, D(185), D(.5))).decimalToBe(370+185);
+        expect(instance.calculateAmazonPoints(1, D(185), D(.5))).decimalToBe(370+185);
     });
 });
 
@@ -81,41 +82,41 @@ describe("amazon grand total", () => {
     });
 });
 
-const checkThresholdForValidity = (intersection: number, ooa_price: Decimal, ooa_shipping: Decimal, a_price: Decimal, a_shipping: Decimal) => {
+const checkThresholdForValidity = (intersection: number, ooaPrice: Decimal, ooaShipping: Decimal, aPrice: Decimal, aShipping: Decimal) => {
     expect(intersection).toBe(Math.floor(intersection)); // expect an integer
 
     if (intersection > 1) { // depends on n
         // check at intersection point, is outside lower?
-        if (instance.calculate_outside_amazon(intersection, ooa_price, ooa_shipping).lessThan(instance.calculate_amazon(intersection, a_price, a_shipping))) {
+        if (instance.calculate_outside_amazon(intersection, ooaPrice, ooaShipping).lessThan(instance.calculate_amazon(intersection, aPrice, aShipping))) {
             // yes, outside is lower, so we're expecting that with growing n it will stay that way:
             for (let step = 1; step < 10; ++step)
-                expect(instance.calculate_outside_amazon(intersection+step, ooa_price, ooa_shipping).toNumber()).toBeLessThan(instance.calculate_amazon(intersection+step, a_price, a_shipping).toNumber());
+                expect(instance.calculate_outside_amazon(intersection+step, ooaPrice, ooaShipping).toNumber()).toBeLessThan(instance.calculate_amazon(intersection+step, aPrice, aShipping).toNumber());
         } else {
             // outside is not lower -> we're expecting that with growing n it will stay that way:
             for (let step = 1; step < 10; ++step)
-                expect(instance.calculate_outside_amazon(intersection + step, ooa_price, ooa_shipping).toNumber()).toBeGreaterThanOrEqual(instance.calculate_amazon(intersection + step, a_price, a_shipping).toNumber());
+                expect(instance.calculate_outside_amazon(intersection + step, ooaPrice, ooaShipping).toNumber()).toBeGreaterThanOrEqual(instance.calculate_amazon(intersection + step, aPrice, aShipping).toNumber());
         }
     } else { // does not depend on n
         // beginning at n=1 we're have one of two cases:
-        if (instance.calculate_outside_amazon(1, ooa_price, ooa_shipping).lessThan(instance.calculate_amazon(1, a_price, a_shipping))) {
+        if (instance.calculate_outside_amazon(1, ooaPrice, ooaShipping).lessThan(instance.calculate_amazon(1, aPrice, aShipping))) {
             // outside is lower, and it should stay like that:
             for (let step = 2; step < 10; ++step)
-                expect(instance.calculate_outside_amazon(step, ooa_price, ooa_shipping).toNumber()).toBeLessThan(instance.calculate_amazon(step, a_price, a_shipping).toNumber());
+                expect(instance.calculate_outside_amazon(step, ooaPrice, ooaShipping).toNumber()).toBeLessThan(instance.calculate_amazon(step, aPrice, aShipping).toNumber());
         } else {
             // outside is higher, and it should stay like that:
             for (let step = 2; step < 10; ++step)
-                expect(instance.calculate_outside_amazon(step, ooa_price, ooa_shipping).toNumber()).toBeGreaterThan(instance.calculate_amazon(step, a_price, a_shipping).toNumber());
+                expect(instance.calculate_outside_amazon(step, ooaPrice, ooaShipping).toNumber()).toBeGreaterThan(instance.calculate_amazon(step, aPrice, aShipping).toNumber());
         }
     }
 };
 
-const checkIntersectionForValidity = (intersection: number, ooa_price: Decimal, ooa_shipping: Decimal, a_price: Decimal, a_shipping: Decimal) =>
-    checkThresholdForValidity(intersection + 1, ooa_price, ooa_shipping, a_price, a_shipping);
+const checkIntersectionForValidity = (intersection: number, ooaPrice: Decimal, ooaShipping: Decimal, aPrice: Decimal, aShipping: Decimal) =>
+    checkThresholdForValidity(intersection + 1, ooaPrice, ooaShipping, aPrice, aShipping);
 
-const intersectTestCase = (ooa_price: Decimal, ooa_shipping: Decimal, a_price: Decimal, a_shipping: Decimal) =>
-    test(`n*${ooa_price}+${ooa_shipping} vs. n*${a_price}+${a_shipping}`, () => {
-        const intersection = Math.ceil(instance.intersect(ooa_price, ooa_shipping, a_price, a_shipping) || 0);
-        checkIntersectionForValidity(intersection, ooa_price, ooa_shipping, a_price, a_shipping);
+const intersectTestCase = (ooaPrice: Decimal, ooaShipping: Decimal, aPrice: Decimal, aShipping: Decimal) =>
+    test(`n*${ooaPrice}+${ooaShipping} vs. n*${aPrice}+${aShipping}`, () => {
+        const intersection = Math.ceil(instance.intersect(ooaPrice, ooaShipping, aPrice, aShipping) || 0);
+        checkIntersectionForValidity(intersection, ooaPrice, ooaShipping, aPrice, aShipping);
     });
 
 describe("intersection", () => {
@@ -126,15 +127,15 @@ describe("intersection", () => {
 describe("mass_optimization", () => {
     for (let i = 0; i < 1e4; ++i) {
         const
-            ooa_price    = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
-            ooa_shipping = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
-            a_price      = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
-            a_shipping   = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2);
+            ooaPrice    = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
+            ooaShipping = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
+            aPrice      = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2),
+            aShipping   = new Decimal(Math.random()).mul(1e2).toDecimalPlaces(2);
 
-        test(`n*${ooa_price}+${ooa_shipping} vs. n*${a_price}+${a_shipping}`, () => {
-            const optimal = instance.optimize(ooa_price, ooa_shipping, a_price, a_shipping);
-            checkThresholdForValidity(optimal.threshold, ooa_price, ooa_shipping, a_price, a_shipping);
-            if (instance.calculate_outside_amazon(optimal.threshold, ooa_price, ooa_shipping).lessThan(instance.calculate_amazon(optimal.threshold, a_price, a_shipping)))
+        test(`n*${ooaPrice}+${ooaShipping} vs. n*${aPrice}+${aShipping}`, () => {
+            const optimal = instance.optimize(ooaPrice, ooaShipping, aPrice, aShipping);
+            checkThresholdForValidity(optimal.threshold, ooaPrice, ooaShipping, aPrice, aShipping);
+            if (instance.calculate_outside_amazon(optimal.threshold, ooaPrice, ooaShipping).lessThan(instance.calculate_amazon(optimal.threshold, aPrice, aShipping)))
                 expect(optimal.orderPlace).toBe(OrderPlace.Outside);
             else
                 expect(optimal.orderPlace).toBe(OrderPlace.Amazon);
