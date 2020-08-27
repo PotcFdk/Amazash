@@ -1,1 +1,15 @@
-<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=favicon.ico><title>amazash</title><link href=css/app.cdffb61a.css rel=preload as=style><link href=js/app.ea954874.js rel=preload as=script><link href=js/chunk-vendors.93f0a17e.js rel=preload as=script><link href=css/app.cdffb61a.css rel=stylesheet></head><body><div id=app><noscript><strong>We're sorry but amazash doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript></div><script src=js/chunk-vendors.93f0a17e.js></script><script src=js/app.ea954874.js></script></body></html>
+<!doctype html><!--
+	Amazash - Copyright 2020 PotcFdk
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+--><html lang="en"><head><meta charset="utf-8"><title>Amazash - Amazon Cashback Calculator</title></head><body><div id="app"><img src="b9b2847d63dd87ba0e1a8cb70044ed6f.gif" alt="Amazash Logo" class="amazash-logo"><versioninformation v-bind:version="version" v-bind:commit-timestamp="commitTimestamp"></versioninformation><configurationselector v-bind:selected.sync="configuration" v-bind:configurations="configurations"></configurationselector><h1 class="demoHeaders">Calculator:</h1><priceinput title="Out-of-Amazon" v-bind:price.sync="ooaPrice" v-bind:shipping.sync="ooaShipping"></priceinput><priceinput title="Amazon" v-bind:price.sync="aPrice" v-bind:shipping.sync="aShipping"></priceinput><button v-on:click="resetAll()">RESET</button><resultmessage v-bind:optimization-result="optimizationResult"></resultmessage><resulttable v-bind:calculator="calculator" v-bind:threshold="optimizationResult.threshold" v-bind:ooa-price="ooaPrice" v-bind:ooa-shipping="ooaShipping" v-bind:a-price="aPrice" v-bind:a-shipping="aShipping"></resulttable></div><script src="main.js"></script></body></html>
